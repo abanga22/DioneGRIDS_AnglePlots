@@ -252,6 +252,9 @@ xlim([-5 5]);
 ylim([-5 5]);
 legend("Ideal Case", "Real Case");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 figure(2);
 plot(sort(beta_nom), sort(beta_nom), 'LineWidth', 2);
@@ -265,6 +268,9 @@ xlim([-5 5]);
 ylim([-5 5]);
 legend("Ideal Case", "Real Case");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 %% Plotting the data raw, we can see that for a given nominal angle, there 
 %% are multiple measured angle possibilities. This is because there are 
@@ -295,6 +301,9 @@ end
 
 %% Plot median data
 
+% Correct for alpha error if needed
+% alpha_measured_med = alpha_measured_med + 0.0264;
+
 figure(3);
 plot(sort(alpha_nom), sort(alpha_nom), 'LineWidth', 2);
 set(gca, 'fontsize', 14);
@@ -307,6 +316,9 @@ xlim([-5 5]);
 ylim([-5 5]);
 legend("Ideal Case", "Real Case");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 figure(4);
 plot(sort(beta_nom), sort(beta_nom), 'LineWidth', 2);
@@ -320,102 +332,209 @@ xlim([-5 5]);
 ylim([-5 5]);
 legend("Ideal Case", "Real Case");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 %% Plot cross-track velocities in perfect case and with errors from angle mismeasurements.
 %% Using ram velocity of v = 7800 m/s
 
-v = 7800;       % ram velocity [m/s]
+v = 7800;       % ram velocity magnitude [m/s]
 
 % perfect cross-track velocities @ 7800 m/s ram
-perfect_x_dir = v*tand(alpha_nom);
-perfect_y_dir = v*tand(beta_nom);
+perfect_x_dir = -v*tand(sort(alpha_nom));
+perfect_y_dir = v*tand(sort(beta_nom));
 
 % measured cross-track velocities @ 7800 m/s ram
-measured_x_dir_med = v*tand(alpha_measured_med);
-measured_y_dir_med = v*tand(beta_measured_med);
-measured_x_dir_max = v*tand(alpha_maxes);
-measured_y_dir_max = v*tand(beta_maxes);
-measured_x_dir_min = v*tand(alpha_mins);
-measured_y_dir_min = v*tand(beta_mins);
+measured_x_dir_med = -v*tand(sort(alpha_measured_med));
+measured_y_dir_med = v*tand(sort(beta_measured_med));
+measured_x_dir_max = -v*tand(sort(alpha_maxes));
+measured_y_dir_max = v*tand(sort(beta_maxes));
+measured_x_dir_min = -v*tand(sort(alpha_mins));
+measured_y_dir_min = v*tand(sort(beta_mins));
 
 % plot v_x
 figure(5);
-plot(sort(alpha_nom), sort(perfect_x_dir), 'LineWidth', 2);
+plot(sort(alpha_nom), perfect_x_dir, 'LineWidth', 2);
 set(gca, 'fontsize', 14);
 hold on;
-errorbar(sort(alpha_nom), sort(measured_x_dir_med), sort(measured_x_dir_med) - sort(measured_x_dir_min), sort(measured_x_dir_max) - sort(measured_x_dir_med), 'o-');
+errorbar(sort(alpha_nom), measured_x_dir_med, measured_x_dir_med - measured_x_dir_min, measured_x_dir_max - measured_x_dir_med, 'o-');
 xlabel("Nominal α (Degrees)");
 ylabel("v_x (m/s)");
 title("Median v_x from Nominal and Measured α at 7800 m/s ram");
 xlim([-5 5]);
 legend("From Nominal α", "From Measured α Medians");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 % plot v_y
 figure(6);
-plot(sort(beta_nom), sort(perfect_y_dir), 'LineWidth', 2);
+plot(sort(beta_nom), perfect_y_dir, 'LineWidth', 2);
 set(gca, 'fontsize', 14);
 hold on;
-errorbar(sort(beta_nom), sort(measured_y_dir_med), sort(measured_y_dir_med) - sort(measured_y_dir_min), sort(measured_y_dir_max) - sort(measured_y_dir_med), 'o-');
+errorbar(sort(beta_nom), measured_y_dir_med, measured_y_dir_med - measured_y_dir_min, measured_y_dir_max - measured_y_dir_med, 'o-');
 xlabel("Nominal β (Degrees)");
 ylabel("v_y (m/s)");
 title("Median v_y from Nominal and Measured β at 7800 m/s ram");
 xlim([-5 5]);
 legend("From Nominal β", "From Measured β Medians");
 grid on;
+set(gca, 'XMinorGrid', 'on', 'YMinorGrid', 'on', ...
+         'GridColor', 'k', 'MinorGridAlpha', 0.4, 'MinorGridLineStyle', '-', ...
+         'MinorGridColor', [0.3,0.3,0.3], 'GridAlpha', 0.4, 'LineWidth', 1.2);
 
 %% Calculate average error between measured medians and nominal values (angles and velocities, angles between -5 and 5 degrees)
 
 disp("All errors calculated for angles in range +/- 5 degrees");
 
-% average error in alpha
-alpha_err = 0;
+% sort alpha and beta
 sorted_alpha_nom = sort(alpha_nom);
 sorted_alpha_measured = sort(alpha_measured_med);
-sorted_alpha_nom_pm5degrees = sorted_alpha_nom(abs(sorted_alpha_nom) <= 5);
-sorted_alpha_measured_pm5degrees = sorted_alpha_measured(abs(sorted_alpha_nom) <= 5);
-for i = 1:length(sorted_alpha_nom_pm5degrees)
-    err = sorted_alpha_nom_pm5degrees(i) - sorted_alpha_measured_pm5degrees(i);
-    alpha_err = alpha_err + err;
-end
-alpha_err = alpha_err / length(alpha_nom);
-disp(strcat("Alpha Error: ", string(alpha_err), " degrees"));
-
-% average error in beta
-beta_err = 0;
 sorted_beta_nom = sort(beta_nom);
 sorted_beta_measured = sort(beta_measured_med);
-sorted_beta_nom_pm5degrees = sorted_beta_nom(abs(sorted_beta_nom) <= 5);
-sorted_beta_measured_pm5degrees = sorted_beta_measured(abs(sorted_beta_nom) <= 5);
-for i = 1:length(sorted_beta_nom_pm5degrees)
-    err = sorted_beta_nom_pm5degrees(i) - sorted_beta_measured_pm5degrees(i);
-    beta_err = beta_err + err;
-end
-beta_err = beta_err / length(beta_nom);
-disp(strcat("Beta Error: ", string(beta_err), " degrees"));
 
-% average error in v_x
-vx_err = 0;
-sorted_vx_nom = sort(perfect_x_dir);
-sorted_vx_measured = sort(measured_x_dir_med);
-sorted_vx_nom_pm5degrees = sorted_vx_nom(abs(sorted_alpha_nom) <= 5);
-sorted_vx_measured_pm5degrees = sorted_vx_measured(abs(sorted_alpha_nom) <= 5);
-for i = 1:length(sorted_vx_nom_pm5degrees)
-    err = sorted_vx_nom_pm5degrees(i) - sorted_vx_measured_pm5degrees(i);
-    vx_err = vx_err + err;
-end
-vx_err = vx_err / length(sorted_vx_nom);
-disp(strcat("v_x Error: ", string(vx_err), " m/s"));
+% filter velocities so we only include those corresponding to +/- 5 degrees
+% of angles.
+perfect_x_dir = perfect_x_dir(abs(sorted_alpha_nom) <= 5);
+perfect_y_dir = perfect_y_dir(abs(sorted_beta_nom) <= 5);
+measured_x_dir_med = measured_x_dir_med(abs(sorted_alpha_nom) <= 5);
+measured_y_dir_med = measured_y_dir_med(abs(sorted_beta_nom) <= 5);
 
-% average error in v_y
-vy_err = 0;
-sorted_vy_nom = sort(perfect_y_dir);
-sorted_vy_measured = sort(measured_y_dir_med);
-sorted_vy_nom_pm5degrees = sorted_vy_nom(abs(sorted_beta_nom) <= 5);
-sorted_vy_measured_pm5degrees = sorted_vy_measured(abs(sorted_beta_nom) <= 5);
-for i = 1:length(sorted_vy_nom_pm5degrees)
-    err = sorted_vy_nom_pm5degrees(i) - sorted_vy_measured_pm5degrees(i);
-    vy_err = vy_err + err;
-end
-vy_err = vy_err / length(sorted_vy_nom);
-disp(strcat("v_y Error: ", string(vy_err), " m/s"));
+% alpha errors
+avg_alpha_err = mean(sorted_alpha_nom - sorted_alpha_measured);
+avg_alpha_mag_err = mean(abs(sorted_alpha_nom) - abs(sorted_alpha_measured));
+max_alpha_mag_err = max(abs(sorted_alpha_nom) - abs(sorted_alpha_measured));
+disp(strcat("Average alpha error: ", string(avg_alpha_err), " degrees"));
+disp(strcat("Average alpha magnitude error: ", string(avg_alpha_mag_err), " degrees"));
+disp(strcat("Maximum alpha magnitude error: ", string(max_alpha_mag_err), " degrees"));
+fprintf('\n');
+
+% beta errors
+avg_beta_err = mean(sorted_beta_nom - sorted_beta_measured);
+avg_beta_mag_err = mean(abs(sorted_beta_nom) - abs(sorted_beta_measured));
+max_beta_mag_err = max(abs(sorted_beta_nom) - abs(sorted_beta_measured));
+disp(strcat("Average beta error: ", string(avg_beta_err), " degrees"));
+disp(strcat("Average beta magnitude error: ", string(avg_beta_mag_err), " degrees"));
+disp(strcat("Maximum beta magnitude error: ", string(max_beta_mag_err), " degrees"));
+fprintf('\n');
+
+% vx errors
+avg_vx_err = mean(perfect_x_dir - measured_x_dir_med);
+avg_vx_mag_err = mean(abs(perfect_x_dir) - abs(measured_x_dir_med));
+max_vx_mag_err = max(abs(perfect_x_dir) - abs(measured_x_dir_med));
+disp(strcat("Average vx error: ", string(avg_vx_err), " m/s"));
+disp(strcat("Average vx magnitude error: ", string(avg_vx_mag_err), " m/s"));
+disp(strcat("Maximum vx magnitude error: ", string(max_vx_mag_err), " m/s"));
+fprintf('\n');
+
+% vy errors
+avg_vy_err = mean(perfect_y_dir - measured_y_dir_med);
+avg_vy_mag_err = mean(abs(perfect_y_dir) - abs(measured_y_dir_med));
+max_vy_mag_err = max(abs(perfect_y_dir) - abs(measured_y_dir_med));
+disp(strcat("Average vy error: ", string(avg_vy_err), " m/s"));
+disp(strcat("Average vy magnitude error: ", string(avg_vy_mag_err), " m/s"));
+disp(strcat("Maximum vy magnitude error: ", string(max_vy_mag_err), " m/s"));
+fprintf('\n');
+
+% % average error in alpha
+% alpha_err_mag = 0;
+% alpha_err = 0;
+% max_alpha_err = 0;
+% sorted_alpha_nom = sort(alpha_nom);
+% sorted_alpha_measured = sort(alpha_measured_med);
+% sorted_alpha_nom_pm5degrees = sorted_alpha_nom(abs(sorted_alpha_nom) <= 5);
+% sorted_alpha_measured_pm5degrees = sorted_alpha_measured(abs(sorted_alpha_nom) <= 5);
+% for i = 1:length(sorted_alpha_nom_pm5degrees)
+%     err_mag = abs(sorted_alpha_nom_pm5degrees(i)) - abs(sorted_alpha_measured_pm5degrees(i));
+%     err = sorted_alpha_nom_pm5degrees(i) - sorted_alpha_measured_pm5degrees(i);
+%     if abs(err_mag) > abs(max_alpha_err)
+%         max_alpha_err = err_mag;
+%     end
+%     alpha_err_mag = alpha_err_mag + err_mag;
+%     alpha_err = alpha_err + err;
+% end
+% alpha_err_mag = alpha_err_mag / length(alpha_nom);
+% alpha_err = alpha_err / length(alpha_nom);
+% % negative errors indicate overestimation (measured > nominal)
+% disp(strcat("Average Alpha Magnitude Error: ", string(alpha_err_mag), " degrees"));
+% disp(strcat("Average Alpha Error: ", string(alpha_err), " degrees"));
+% disp(strcat("Max Alpha Magnitude Error: ", string(max_alpha_err), " degrees"));
+% fprintf('\n');
+% 
+% % average error in beta
+% beta_err_mag = 0;
+% beta_err = 0;
+% max_beta_err = 0;
+% sorted_beta_nom = sort(beta_nom);
+% sorted_beta_measured = sort(beta_measured_med);
+% sorted_beta_nom_pm5degrees = sorted_beta_nom(abs(sorted_beta_nom) <= 5);
+% sorted_beta_measured_pm5degrees = sorted_beta_measured(abs(sorted_beta_nom) <= 5);
+% for i = 1:length(sorted_beta_nom_pm5degrees)
+%     err_mag = abs(sorted_beta_nom_pm5degrees(i)) - abs(sorted_beta_measured_pm5degrees(i));
+%     err = sorted_beta_nom_pm5degrees(i) - sorted_beta_measured_pm5degrees(i);
+%     if abs(err_mag) > abs(max_beta_err)
+%         max_beta_err = err_mag;
+%     end
+%     beta_err_mag = beta_err_mag + err_mag;
+%     beta_err = beta_err + err;
+% end
+% beta_err_mag = beta_err_mag / length(beta_nom);
+% beta_err = beta_err / length(beta_nom);
+% % negative errors indicate overestimation (measured > nominal)
+% disp(strcat("Average Beta Magnitude Error: ", string(beta_err_mag), " degrees"));
+% disp(strcat("Average Beta Error: ", string(beta_err), " degrees"));
+% disp(strcat("Max Beta Magnitude Error: ", string(max_beta_err), " degrees"));
+% fprintf('\n');
+% 
+% % average error in v_x
+% vx_err_mag = 0;
+% vx_err = 0;
+% max_vx_err = 0;
+% vx_nom = perfect_x_dir;
+% vx_measure = measured_x_dir_med;
+% sorted_vx_nom_pm5degrees = vx_nom(abs(sorted_alpha_nom) <= 5);
+% sorted_vx_measured_pm5degrees = vx_measure(abs(sorted_alpha_nom) <= 5);
+% for i = 1:length(sorted_vx_nom_pm5degrees)
+%     err_mag = abs(sorted_vx_nom_pm5degrees(i)) - abs(sorted_vx_measured_pm5degrees(i));
+%     err = sorted_vx_nom_pm5degrees(i) - sorted_vx_measured_pm5degrees(i);
+%     if abs(err_mag) > abs(max_vx_err)
+%         max_vx_err = err_mag;
+%     end
+%     vx_err_mag = vx_err_mag + err_mag;
+%     vx_err = vx_err + err;
+% end
+% vx_err_mag = vx_err_mag / length(vx_nom);
+% vx_err = vx_err / length(vx_nom);
+% % negative errors indicate overestimation (measured > nominal)
+% disp(strcat("Average v_x Magnitude Error: ", string(vx_err_mag), " m/s"));
+% disp(strcat("Average v_x Error: ", string(vx_err), " m/s"));
+% disp(strcat("Max v_x Magnitude Error: ", string(max_vx_err), " m/s"));
+% disp(alpha_nom())
+% fprintf('\n');
+% 
+% % average error in v_y
+% vy_err_mag = 0;
+% vy_err = 0;
+% max_vy_err = 0;
+% vy_nom = perfect_y_dir;
+% vy_measure = measured_y_dir_med;
+% sorted_vy_nom_pm5degrees = vy_nom(abs(sorted_beta_nom) <= 5);
+% sorted_vy_measured_pm5degrees = vy_measure(abs(sorted_beta_nom) <= 5);
+% for i = 1:length(sorted_vy_nom_pm5degrees)
+%     err_mag = abs(sorted_vy_nom_pm5degrees(i)) - abs(sorted_vy_measured_pm5degrees(i));
+%     err = sorted_vy_nom_pm5degrees(i) - sorted_vy_measured_pm5degrees(i);
+%     if abs(err_mag) > abs(max_vy_err)
+%         max_vy_err = err_mag;
+%     end
+%     vy_err_mag = vy_err_mag + err_mag;
+%     vy_err = vy_err + err;
+% end
+% vy_err_mag = vy_err_mag / length(vy_nom);
+% vy_err = vy_err / length(vy_nom);
+% % negative errors indicate overestimation (measured > nominal)
+% disp(strcat("Average v_y Magnitude Error: ", string(vy_err_mag), " m/s"));
+% disp(strcat("Average v_y Error: ", string(vy_err), " m/s"));
+% disp(strcat("Max v_y Magnitude Error: ", string(max_vy_err), " m/s"));
+% fprintf('\n');
